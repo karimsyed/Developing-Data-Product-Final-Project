@@ -1,0 +1,51 @@
+
+Developing Data Product: Final Project
+========================================================
+author: Syed Karim  
+date: 04/15/2017
+autosize: true
+
+<h2><b>Growth of Orange Trees by Their Age</b></h2>
+
+Looking at the Data
+========================================================
+
+The Orange data frame has 35 rows and 3 columns of records of the growth of orange trees. Tree column is an ordered factor indicating the tree on which the measurement is made. The age is a numeric vector giving the age of the tree (days since 1968/12/31). Finally the circumference is a numeric vector of trunk circumferences (mm). This is probably "circumference at breast height", a standard measurement in forestry.
+
+<h2>Our Goal</h2>
+Our goal is to find a regression model by finding the growth of circumference (y), of a specific tree, by its age (x). User can select tree from the drop down box. 
+
+Selecting Trees
+========================================================
+There are 5 Trees. User can select the trees by entering the value in the inputbox. User can also check box if he/she wants to see the model for the desired tree. the following r code is used for the inputs.  
+
+```{r, echo=TRUE, eval=FALSE}
+      numericInput("numeric", "Which Tree?", 
+                   value = 5, min = 1, max = 5, step = 1),
+      
+      checkboxInput("showModel1", "Show/Hide Model", value = TRUE)
+```
+
+Creating Data subset
+========================================================
+Upon user's slection of tree, the server creats subset of the original dataset. For example, if user select the 1st tree the following r code is used to create a subset from the Orange dataset that contains aonly the data for 1st tree.
+
+```{r, echo=T}
+newOrange<-subset(Orange, Tree==1)
+
+newOrange
+```
+Creating Plot and Model
+========================================================
+The following r code creates linear model, the plot and shows the model if checkbox if selected.
+
+```{r, echo=T, eval=FALSE}
+model <- lm(circumference ~ age, data = newOrange)
+plot(newOrange$age, newOrange$circumference, xlab = "Age", 
+         ylab = "Circumference", bty = "n", pch = 16,
+         xlim = c(10, 1500), ylim = c(0, 300))
+   
+    if(input$showModel1){
+      abline(model, col = "red", lwd = 2)
+    }
+```
